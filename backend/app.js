@@ -26,6 +26,8 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
+// When user sends their resume, to get that file we use express-fileupload
 app.use(
   fileUpload({
     useTempFiles: true,

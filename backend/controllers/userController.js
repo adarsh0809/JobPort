@@ -45,7 +45,7 @@ export const register = catchAsyncErrors(async (req, res, next) => {
       },
       coverLetter,
     };
-    if (req.files && req.files.resume) {
+    if (req.files && req.files.resume) { // if user sent a file and it will be resume only
       const { resume } = req.files;
       if (resume) {
         try {
@@ -58,6 +58,9 @@ export const register = catchAsyncErrors(async (req, res, next) => {
               new ErrorHandler("Failed to upload resume to cloud.", 500)
             );
           }
+          // after we check all the edge cases for the resume , we need to save the resume into the DB
+          // which we get from the cloudinary
+
           userData.resume = {
             public_id: cloudinaryResponse.public_id,
             url: cloudinaryResponse.secure_url,
@@ -67,7 +70,10 @@ export const register = catchAsyncErrors(async (req, res, next) => {
         }
       }
     }
+    // after that we will send the creted userData to the DB
+    
     const user = await User.create(userData);
+    console.log (user);
     sendToken(user, 201, res, "User Registered.");
   } catch (error) {
     next(error);

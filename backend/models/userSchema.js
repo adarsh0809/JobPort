@@ -53,13 +53,18 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.pre("save", async function (next) {
+
+// prior to user saving into the DB "save" a async function is called 
+// which has the password with the help of bcrypt 
+userSchema.pre("save", async function (next) {   
   if (!this.isModified("password")) {
     next();
   }
   this.password = await bcrypt.hash(this.password, 10);
 });
 
+
+// will used when the user tris to login
 userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
